@@ -1,0 +1,47 @@
+<div class="table-container">
+
+    <div>
+        <h1 class="heading">User Table </h1>
+           <!-- Logout Button -->
+    <button class="btn btn-danger ml-auto" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+        <button class="btn" (click) = "addData()"> +Add </button>
+        
+    </div>
+    <table>
+      <thead>
+        <tr>
+          
+          <th>Name</th>
+          <th>Gender</th>
+          <th>Status</th>
+          <th>Email</th>
+          <th>Phone</th>
+          
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr  [routerLink]="['/display-details', user.guidId]" click *ngFor="let user of userdata">
+        
+       <!-- displaying data of a specified user 
+        as per the required guidId which user is select from user table -->
+
+          <td>{{user.name}}</td>
+          <td>{{user.gender}}</td>
+          <td>{{user.status}}</td>
+          <td>{{user.email}}</td>
+          <td>{{user.phone}}</td>
+          
+          
+        
+         
+        </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+  
+ 
