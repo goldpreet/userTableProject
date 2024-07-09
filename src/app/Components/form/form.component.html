@@ -45,6 +45,12 @@
       </div>
 
       <div class="form-group">
+        <label for="image">Upload Image</label>
+        <input type="file" id="image" (change)="onFileChange($event)" />
+        <span *ngIf="hasError('image', 'required')" class="error-message">Image is required</span>
+      </div>
+
+      <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" formControlName="password"   placeholder="Enter Password"/>
         <span *ngIf="hasError('password', 'required')" class="error-message">Password required</span>

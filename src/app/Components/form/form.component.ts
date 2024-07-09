@@ -49,7 +49,7 @@ export class FormComponent {
     ];
     return initialFields.every((field) => this.userForm.get(field)?.valid);
   }
-
+  selectedFile: File | null = null;
   isQualificationVisible = false;
 
   toggleQualificationFields() {
@@ -70,7 +70,7 @@ export class FormComponent {
 
   getQualificationFormGroup(index: number): FormGroup {
     return this.qualifications.controls[index] as FormGroup;
-  }   
+  }
 
   addQualification() {
     const areAllQualificationsValid = this.qualifications.controls.every(
@@ -90,7 +90,7 @@ export class FormComponent {
       );
     }
   }
-// add more qualification only if the minimum all qualification row data is filled
+  // add more qualification only if the minimum all qualification row data is filled
 
   isAboveQualificationFilled() {
     const areAllQualificationsValid = this.qualifications.controls.every(
@@ -120,16 +120,46 @@ export class FormComponent {
   }
   // submit button is validating that if  
   // data of qualification details filled then only submit button will appear
-route =inject(Router)
+  route = inject(Router)
   userService = inject(UserService);
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
   onSubmit() {
-    console.log(this.userForm.value);
-// user data coming from backend
-    this.userService.addUserDetails(this.userForm.value).subscribe(() => {
-      alert('data submitted');
-      // alert msg will be shown 
-      this.route.navigateByUrl('/user') 
-      // after data is added in frorm it will be redirected to user table
+    if (this.userForm.invalid) {
+      return;
+    }
+  
+    const formData = new FormData();
+   console.log(this.userForm.controls,"controle");
+   
+    // Append each form field individually
+    Object.keys(this.userForm.controls).forEach(key => {
+      if (key !== 'qualifications') {
+        formData.append(key, this.userForm.get(key)?.value);
+      }
+    });
+  
+    // Append qualifications as a JSON string
+    formData.append('qualifications', JSON.stringify(this.userForm.get('qualifications')?.value));
+  
+    // Append the file
+    if (this.selectedFile) {
+      formData.append('imageFile', this.selectedFile, this.selectedFile.name);
+    }
+  
+    console.log('FormData entries:');
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+  
+    this.userService.addUserDetails(formData).subscribe(() => {
+      alert('Data submitted');
+      this.route.navigateByUrl('/user');
     });
   }
 }

@@ -1,92 +1,104 @@
 <div class="container">
   <h2 class="text-center mb-4">User Details</h2>
-  <div class="row">
-    <div class="col-md-12 text-right mb-3">
-      <button class="btn btn-secondary" (click)="toggleEditMode()">
-        
-        <i class="{{ isEditMode ? 'fas fa-save' : 'fas fa-edit' }}"></i> 
-        {{ isEditMode ? 'Save' : 'Edit' }}
-      </button>
-      
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <h4 class="mb-3">Personal Information</h4>
-      <table class="table table-bordered">
-        <tbody>
-          <tr *ngFor="let field of ['name', 'email', 'status', 'gender', 'age', 'phone', 'salary', 'password']">
-            <th>{{ field | titlecase }}</th>
-            <td *ngIf="!isEditMode">{{ userDetails[field] }}</td>
-            <td *ngIf="isEditMode">
-              <input [(ngModel)]="userDetails[field]" class="form-control" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="main">
+    <div class="row">
+      <img [src]="'https://localhost:7071' + userDetails.imageUrl" class="image-dp" alt="User Image">
 
-    <div class="col-md-6">
-      <div class="add">
-        <h4 class="mb-3">Qualifications</h4>
-        <div class="tooltip">
-          <button type="button" class="btn btn-secondary add-qualification-btn" (click)="toggleAddQualification()">+
-            <i class="fas fa-plus"></i>
-            <span class="tooltip-text">Add Qualification</span>
-          </button>
-        </div>
-        <div class="table">
-          <table class="table table-bordered" *ngIf="userDetails.qualifications && userDetails.qualifications.length > 0">
-            <thead>
-              <tr>
-                <th>Qualification Name</th>
-                <th>Experience</th>
-                <th>Institution</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let qualification of userDetails.qualifications">
-                <td>{{ qualification.qualificationName }}</td>
-                <td>{{ qualification.experience }} years</td>
-                <td>{{ qualification.institution }}</td>
-              </tr>
-              <tr *ngIf="showQualificationInputs">
-                <td>
-                  <input type="text" [(ngModel)]="newQualification.qualificationName" class="form-control" placeholder="Qualification Name" />
-                </td>
-                <td>
-                  <input type="number" [(ngModel)]="newQualification.experience" class="form-control" placeholder="Experience (years)" />
-                </td>
-                <td>
-                  <input type="text" [(ngModel)]="newQualification.institution" class="form-control" placeholder="Institution" />
-                </td>
-                <td>
-                  <button class="btn btn-success" (click)="updateQualification()">✔</button>
-                  <button class="btn btn-danger" (click)="cancelAddQualification()">✖</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <p *ngIf="!userDetails.qualifications || userDetails.qualifications.length === 0">No qualifications found.</p>
-        </div>
+      <button (click)="editImage()">Edit Image</button>
+  
+      <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none">
+      <div class="col-md-12 text-right mb-3">
+        <button class="btn btn-secondary" (click)="toggleEditMode()">
+
+          <i class="{{ isEditMode ? 'fas fa-save' : 'fas fa-edit' }}"></i>
+          {{ isEditMode ? 'Save' : 'Edit' }}
+        </button>
+
       </div>
     </div>
-  
+    <div class="row">
+      <div class="col-md-6">
+        <h4 class="mb-3">Personal Information</h4>
+        <table class="table table-bordered">
+          <tbody>
+            <tr *ngFor="let field of ['name', 'email', 'status', 'gender', 'age', 'phone', 'salary', 'password']">
+              <th>{{ field | titlecase }}</th>
+              <td *ngIf="!isEditMode">{{ userDetails[field] }}</td>
+              <td *ngIf="isEditMode">
+                <input [(ngModel)]="userDetails[field]" class="form-control" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <div class="image-container" style="position: relative;">
-      <!-- Display the uploaded image at the top left corner -->
-      <img *ngIf="uploadedImage" [src]="uploadedImage" alt="Uploaded Image" class="uploaded-image" style="position: absolute; top: 0; left: 0; width: 100px; height: 100px; object-fit: cover;">
+      <div class="col-md-6">
+        <div class="add">
+          <h4 class="mb-3">Qualifications</h4>
+          <div class="tooltip">
+            <button type="button" class="btn btn-secondary add-qualification-btn" (click)="toggleAddQualification()">+
+              <i class="fas fa-plus"></i>
+              <span class="tooltip-text">Add Qualification</span>
+            </button>
+          </div>
+          <div class="table">
+            <table class="table table-bordered"
+              *ngIf="userDetails.qualifications && userDetails.qualifications.length > 0">
+              <thead>
+                <tr>
+                  <th>Qualification Name</th>
+                  <th>Experience</th>
+                  <th>Institution</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let qualification of userDetails.qualifications">
+                  <td>{{ qualification.qualificationName }}</td>
+                  <td>{{ qualification.experience }} years</td>
+                  <td>{{ qualification.institution }}</td>
+                </tr>
+                <tr *ngIf="showQualificationInputs">
+                  <td>
+                    <input type="text" [(ngModel)]="newQualification.qualificationName" class="form-control"
+                      placeholder="Qualification Name" />
+                  </td>
+                  <td>
+                    <input type="number" [(ngModel)]="newQualification.experience" class="form-control"
+                      placeholder="Experience (years)" />
+                  </td>
+                  <td>
+                    <input type="text" [(ngModel)]="newQualification.institution" class="form-control"
+                      placeholder="Institution" />
+                  </td>
+                  <td>
+                    <button class="btn btn-success" (click)="updateQualification()">✔</button>
+                    <button class="btn btn-danger" (click)="cancelAddQualification()">✖</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p *ngIf="!userDetails.qualifications || userDetails.qualifications.length === 0">No qualifications found.
+            </p>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="image-container" style="position: relative;">
+        <!-- Display the uploaded image at the top left corner -->
+        <img *ngIf="uploadedImage" [src]="uploadedImage" alt="Uploaded Image" class="uploaded-image"
+          style="position: absolute; top: 0; left: 0; width: 100px; height: 100px; object-fit: cover;">
+      </div>
+
+      <!-- Add file input and upload button -->
+      <div>
+        <input type="file" (change)="onFileSelected($event)">
+        <button (click)="uploadImage()">Upload Image</button>
+      </div>
+
+      <!-- Existing HTML content for user details -->
+      <!-- Your existing HTML for user details goes here -->
+
+
     </div>
-    
-    <!-- Add file input and upload button -->
-    <div>
-      <input type="file" (change)="onFileSelected($event)">
-      <button (click)="uploadImage()">Upload Image</button>
-    </div>
-    
-    <!-- Existing HTML content for user details -->
-    <!-- Your existing HTML for user details goes here -->
-    
   </div>
-
-  

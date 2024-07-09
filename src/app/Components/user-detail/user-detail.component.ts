@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../Services/user.service';
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 export class UserDetailComponent {
   userDetails: any = {};
   isEditMode: boolean = false;
-    uploadedImage: string | null = null;
+  uploadedImage: string | null = null;
 
   showQualificationInputs: boolean = false;
   newQualification: any = {
@@ -23,7 +23,7 @@ export class UserDetailComponent {
     experience: null,
     institution: ''
   };
-
+  @ViewChild('fileInput') fileInput!: ElementRef;
   selectedFile: File | null = null;
   userImage: string | null = null; // Holds the path to the uploaded image
 
@@ -31,13 +31,16 @@ export class UserDetailComponent {
     private route: ActivatedRoute,
     private userService: UserService,
     private http: HttpClient
-  ) {}
+
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const guidId = params.get('id');
       this.userService.getUserById(guidId).subscribe((data: any) => {
         this.userDetails = data;
+        console.log(data,"data");
+        
         // Assign existing user image path if available
         this.userImage = this.userDetails.imagePath; // Replace with your actual property name
       });
@@ -72,37 +75,43 @@ export class UserDetailComponent {
   }
 
 
+  editImage() {
+    this.fileInput.nativeElement.click();
+  }
 
   onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
+    this.selectedFile = event.target.files[0] as File;
+
+
+
+    if (this.selectedFile) {
+      this.uploadImage();
+    }
   }
 
   uploadImage() {
-    if (this.selectedFile) {
+    if (this.selectedFile && this.userDetails.guidId) {
+      console.log(this.selectedFile, "selectd");
       const formData = new FormData();
-      formData.append('file', this.selectedFile);
-  
-      this.http.post<any>('http://localhost:3000/upload', formData).subscribe(
-        response => {
-          console.log('Image uploaded successfully:', response);
-          const uploadedFileName = response.filename;
-          this.copyImageToAssetsFolder(uploadedFileName);
+      formData.append('imageFile', this.selectedFile, this.selectedFile.name);
+
+      this.userService.updateDp(this.userDetails.guidId, formData).subscribe({
+        next: (response:any) => {
+          console.log('Image updated successfully', response);
+          this.userDetails.imageUrl = response.imageUrl;
+          this.userImage = response.imageUrl;
+
         },
-        (error: HttpErrorResponse) => {
-          console.error('Error uploading image:', error);
-          if (error.error instanceof ErrorEvent) {
-            // A client-side or network error occurred.
-            console.error('Client-side error:', error.error.message);
-          } else {
-            // The backend returned an unsuccessful response code.
-            console.error(`Backend returned code ${error.status}, body was: ${error.error}`);
-          }
+        error: (error) => {
+          console.error('Error updating image', error);
+        },
+        complete: () => {
+          console.log('Image update operation completed');
         }
-      );
-    } else {
-      console.error('No file selected');
+      });
     }
   }
+
   copyImageToAssetsFolder(uploadedFileName: any) {
     throw new Error('Method not implemented.');
   }

@@ -28,14 +28,25 @@ export class UserService {
     return of({ success: true, message: 'Image uploaded successfully!' });
 };
 
-  addUserDetails(payload: any): Observable<any> {
-    const headers = this.createAuthorizationHeader();
-    return this.httpClient.post(`https://localhost:7071/api/Employee`, payload, { headers });
-  }
+addUserDetails(payload: FormData): Observable<any> {
+  const headers = new HttpHeaders({
+    // 'Authorization': `Bearer ${this.getToken()}`,  // Assuming you have a method to get the token
+    // Note: Don't set Content-Type header when sending FormData
+  });
 
+  return this.httpClient.post(`https://localhost:7071/api/Employee`, payload, { 
+    headers: headers,
+    reportProgress: true,
+    observe: 'events'
+  });
+}
   getUserDetails(): Observable<any[]> {
     const headers = this.createAuthorizationHeader();
     return this.httpClient.get<any[]>(`https://localhost:7071/api/Employee`, { headers });
+  }
+
+  updateDp(id:any, image:FormData){
+    return this.httpClient.put<any[]>(`https://localhost:7071/api/Employee/${id}/photo`,image);
   }
 
   getUserById(param: any): Observable<any> {
