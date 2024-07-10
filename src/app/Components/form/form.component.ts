@@ -24,6 +24,7 @@ export class FormComponent {
   constructor(private fb: FormBuilder) {
     this.userForm = this.fb.group({
       // id: ['', Validators.required],
+      role: ['', Validators.required],
       name: ['', Validators.required],
       email: ['', [Validators.email, Validators.required]],
       status: ['', Validators.required],
@@ -38,6 +39,7 @@ export class FormComponent {
 
   areInitialFieldsValid(): boolean {
     const initialFields = [
+      'role',
       'name',
       'email',
       'status',
@@ -80,7 +82,7 @@ export class FormComponent {
     if (areAllQualificationsValid) {
       const qualificationGroup = this.fb.group({
         qualificationName: ['', Validators.required],
-        experience: ['', [Validators.required, Validators.min(0)]],
+        experience: ['', [Validators.required, Validators.min(1)]],
         institution: ['', Validators.required],
       });
       this.qualifications.push(qualificationGroup);
@@ -128,15 +130,18 @@ export class FormComponent {
       this.selectedFile = file;
     }
   }
+  
 
   onSubmit() {
     if (this.userForm.invalid) {
       return;
     }
+
+    console.log(this.selectedFile,"selcetdd file");
+    
   
     const formData = new FormData();
-   console.log(this.userForm.controls,"controle");
-   
+  
     // Append each form field individually
     Object.keys(this.userForm.controls).forEach(key => {
       if (key !== 'qualifications') {
@@ -144,8 +149,13 @@ export class FormComponent {
       }
     });
   
-    // Append qualifications as a JSON string
-    formData.append('qualifications', JSON.stringify(this.userForm.get('qualifications')?.value));
+    // Append qualifications as an array of objects
+    const qualifications = this.userForm.get('qualifications')?.value;
+    qualifications.forEach((qual: any, index: number) => {
+      formData.append(`qualifications[${index}].qualificationName`, qual.qualificationName);
+      formData.append(`qualifications[${index}].experience`, qual.experience);
+      formData.append(`qualifications[${index}].institution`, qual.institution);
+    });
   
     // Append the file
     if (this.selectedFile) {

@@ -1,9 +1,9 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../Services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-detail',
@@ -23,39 +23,80 @@ export class UserDetailComponent {
     experience: null,
     institution: ''
   };
+
   @ViewChild('fileInput') fileInput!: ElementRef;
   selectedFile: File | null = null;
-  userImage: string | null = null; // Holds the path to the uploaded image
+  userImage: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
     private http: HttpClient
-
   ) { }
 
+
+  user: any;
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const guidId = params.get('id');
-      this.userService.getUserById(guidId).subscribe((data: any) => {
-        this.userDetails = data;
-        console.log(data,"data");
-        
-        // Assign existing user image path if available
-        this.userImage = this.userDetails.imagePath; // Replace with your actual property name
-      });
+      if (guidId) {
+        this.userService.getUserById(guidId).subscribe((data: any) => {
+          this.userDetails = data;
+          this.userImage = this.userDetails.imagePath;
+        });
+      }
     });
+    this.user = this.userService.getLoggedInUser();
+    console.log(this.user, "user");
   }
 
+
+
+
+
   toggleAddQualification() {
+    if(this.user.role!=="Administrator"){
+      alert("Employee is not admin");
+      return;
+    }
     this.showQualificationInputs = true;
   }
 
   updateQualification() {
-    // Update qualification logic as per your existing implementation
+    if (this.newQualification.qualificationName &&
+      this.newQualification.experience !== null &&
+      this.newQualification.institution) {
+
+      if (!this.userDetails.qualifications) {
+        this.userDetails.qualifications = [];
+      }
+
+      const newQualificationEntry = { ...this.newQualification };
+      this.userDetails.qualifications.push(newQualificationEntry);
+
+      const payload = { ...this.userDetails };
+
+      this.userService.updateUserData(payload).subscribe(() => {
+        console.log("Updated successfully");
+      });
+
+      this.newQualification = {
+        qualificationName: '',
+        experience: null,
+        institution: ''
+      };
+
+      this.showQualificationInputs = false;
+    } else {
+      alert('Please fill all fields');
+    }
   }
 
   toggleEditMode() {
+    if(this.user.role !== "Administrator"){
+      alert("Employee is not Admin")
+      return ;
+    }
     this.isEditMode = !this.isEditMode;
     if (!this.isEditMode) {
       const payload = { ...this.userDetails };
@@ -74,15 +115,12 @@ export class UserDetailComponent {
     this.showQualificationInputs = false;
   }
 
-
   editImage() {
     this.fileInput.nativeElement.click();
   }
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0] as File;
-
-
 
     if (this.selectedFile) {
       this.uploadImage();
@@ -91,16 +129,14 @@ export class UserDetailComponent {
 
   uploadImage() {
     if (this.selectedFile && this.userDetails.guidId) {
-      console.log(this.selectedFile, "selectd");
       const formData = new FormData();
       formData.append('imageFile', this.selectedFile, this.selectedFile.name);
 
       this.userService.updateDp(this.userDetails.guidId, formData).subscribe({
-        next: (response:any) => {
+        next: (response: any) => {
           console.log('Image updated successfully', response);
           this.userDetails.imageUrl = response.imageUrl;
           this.userImage = response.imageUrl;
-
         },
         error: (error) => {
           console.error('Error updating image', error);
@@ -111,8 +147,4 @@ export class UserDetailComponent {
       });
     }
   }
-
-  copyImageToAssetsFolder(uploadedFileName: any) {
-    throw new Error('Method not implemented.');
-  }
-}  
+}

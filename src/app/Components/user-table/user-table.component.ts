@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { Router, RouterModule} from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../Services/user.service';
 
 interface User {
@@ -12,7 +12,7 @@ interface User {
 @Component({
   selector: 'app-user-table',
   standalone: true,
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.css']
 })
@@ -25,13 +25,15 @@ export class UserTableComponent {
     { id: 5, name: 'Lavanya', status: 'Pending' }
   ];
 
-  editedUser: User | null = null; 
+  editedUser: User | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   editUser(user: User) {
     this.editedUser = { ...user }; // Make a copy of the user to edit
   }
+  user: any
+ 
 
   cancelEdit() {
     this.editedUser = null; // Cancel editing, reset editedUser
@@ -58,19 +60,21 @@ export class UserTableComponent {
     this.router.navigateByUrl("/create-form");
   }
 
-  userService =inject(UserService)
-userdata :any=[]
-  ngOnInit()
-  {
-    this.userService.getUserDetails().subscribe((data:any)=>{
-      console.log(data,"data users");
-      this.userdata=data
+  userService = inject(UserService)
+  userdata: any = []
+  ngOnInit() {
+    this.userService.getUserDetails().subscribe((data: any) => {
+      console.log(data, "data users");
+      this.userdata = data
     })
+
+    this.user = this.userService.getLoggedInUser();
+    console.log(this.user, "user");
     // getting data from backend part 
   }
 
   logout() {
-   
+
     this.router.navigate(['/log-in']);
   }
 

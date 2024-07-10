@@ -4,16 +4,24 @@
     <div class="row">
       <img [src]="'https://localhost:7071' + userDetails.imageUrl" class="image-dp" alt="User Image">
 
-      <button (click)="editImage()">Edit Image</button>
+      <button (click)="editImage()"><img class="editbtn" src=" https://cdn-icons-png.flaticon.com/128/8417/8417111.png" alt="EditImg">Image Edit</button>
+     
+      
+      <hr>
+
+      <div class="blank">
+        <br>
+        <br>
+      </div>
   
       <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none">
       <div class="col-md-12 text-right mb-3">
         <button class="btn btn-secondary" (click)="toggleEditMode()">
 
           <i class="{{ isEditMode ? 'fas fa-save' : 'fas fa-edit' }}"></i>
+          <img class="editbtn" src="https://as2.ftcdn.net/v2/jpg/03/38/46/23/1000_F_338462346_wZZhUA9S6daekMfyuF8cBssJgj4nao8M.jpg" alt="Company Logo">
           {{ isEditMode ? 'Save' : 'Edit' }}
-        </button>
-
+        </button>      
       </div>
     </div>
     <div class="row">
@@ -21,7 +29,7 @@
         <h4 class="mb-3">Personal Information</h4>
         <table class="table table-bordered">
           <tbody>
-            <tr *ngFor="let field of ['name', 'email', 'status', 'gender', 'age', 'phone', 'salary', 'password']">
+            <tr *ngFor="let field of ['role', 'name', 'email', 'status', 'gender', 'age', 'phone', 'salary', 'password']">
               <th>{{ field | titlecase }}</th>
               <td *ngIf="!isEditMode">{{ userDetails[field] }}</td>
               <td *ngIf="isEditMode">
@@ -38,7 +46,7 @@
           <div class="tooltip">
             <button type="button" class="btn btn-secondary add-qualification-btn" (click)="toggleAddQualification()">+
               <i class="fas fa-plus"></i>
-              <span class="tooltip-text">Add Qualification</span>
+              <span class="tooltip-text" (click)="updateQualification()">Add Qualification</span>
             </button>
           </div>
           <div class="table">
@@ -87,7 +95,7 @@
       <div class="image-container" style="position: relative;">
         <!-- Display the uploaded image at the top left corner -->
         <img *ngIf="uploadedImage" [src]="uploadedImage" alt="Uploaded Image" class="uploaded-image"
-          style="position: absolute; top: 0; left: 0; width: 100px; height: 100px; object-fit: cover;">
+          style="position: absolute; top: 0; left: 0;  width: 100px; height: 100px; object-fit: cover;">
       </div>
 
       <!-- Add file input and upload button -->

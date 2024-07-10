@@ -3,6 +3,7 @@
     <div>
         <h1 class="heading">User Table </h1>
            <!-- Logout Button -->
+            <p>{{user.name}}</p>
     <button class="btn btn-danger ml-auto" (click)="logout()">
       <i class="fas fa-sign-out-alt"></i> Logout
     </button>
@@ -12,7 +13,7 @@
     <table>
       <thead>
         <tr>
-          
+          <th>Role</th>
           <th>Name</th>
           <th>Gender</th>
           <th>Status</th>
@@ -28,15 +29,13 @@
        <!-- displaying data of a specified user 
         as per the required guidId which user is select from user table -->
 
+          <td>{{user.role}}</td>
           <td>{{user.name}}</td>
           <td>{{user.gender}}</td>
           <td>{{user.status}}</td>
           <td>{{user.email}}</td>
           <td>{{user.phone}}</td>
-          
-          
-        
-         
+   
         </tr>
       </tbody>
     </table>

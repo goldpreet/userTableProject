@@ -3,6 +3,12 @@
     <div class="form-container">
       <h1 class="heading">Form Data</h1>
       <div class="form-group">
+
+        <div class="form-group">
+          <label for="role">Role</label>
+          <input id="role" formControlName="role" type="text" placeholder="Admin or User" />
+          <span *ngIf="hasError('role', 'required')" class="error-message">Role is required</span>
+        </div>
         <label for="name">Name</label>
         <input id="name" formControlName="name" type="text" />
         <span *ngIf="hasError('name', 'required')" class="error-message">Name is required</span>
@@ -97,7 +103,7 @@
           (click)="removeQualification(i)">Remove</button>
       </div>
       <button [disabled]="!isAboveQualificationFilled()" style="float: right" type="button"
-        (click)="addQualification()">
+        (click)="  addQualification()">
         Add Another Qualification
       </button>
       <button [disabled]="!isAboveQualificationFilled()" style="margin-top: 16px" type="submit"
