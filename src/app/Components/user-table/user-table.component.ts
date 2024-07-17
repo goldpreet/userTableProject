@@ -20,15 +20,28 @@ interface User {
 export class UserTableComponent implements OnInit {
   rows: any[] = [];
   filteredRows: any[] = [];
-  columns = [
-    { prop: 'role', name: 'Role' },
-    { prop: 'name', name: 'Name' },
-    { prop: 'gender', name: 'Gender' },
-    { prop: 'phone', name: 'Phone' },
-    { prop: 'age', name: 'Age' },
-    { prop: 'email', name: 'Email' },
-    { prop: 'password', name: 'Password' }
-  ];
+  columns: any = [];
+
+
+  initializeColumns(): void {
+    this.columns = [
+      { prop: 'role', name: 'Role' },
+      { prop: 'name', name: 'Name' },
+      { prop: 'gender', name: 'Gender' },
+      { prop: 'phone', name: 'Phone' },
+      { prop: 'age', name: 'Age' },
+      { prop: 'id', name: 'id' },
+      { prop: 'email', name: 'Email' },
+      {
+        prop: 'actions',
+        name: 'Actions',
+        sortable: false,
+        canAutoResize: false,
+        draggable: false,
+        // cellTemplate: this.actionTemplate
+      }
+    ];
+  }
 
   currentPage: number = 1;
   totalPages: number = 1;
@@ -43,6 +56,7 @@ export class UserTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.initializeColumns();
     this.user = this.userService.getLoggedInUser();
     console.log(this.user, "user");
   }
@@ -167,6 +181,20 @@ export class UserTableComponent implements OnInit {
     }
   }
 
+  deleteUser(row: any) {
+    console.log(row, "row");
+
+    this.userService.deleteUser(row.id).subscribe(() => {
+      alert('User deleted successfully');
+      // Remove the deleted user from the list
+      this.rows = this.rows.filter(user => user.id !== row.id);
+      this.filteredRows = this.filteredRows.filter(user => user.id !== row.id);
+      this.initializePagination();  // Reinitialize pagination to reflect the changes
+    }, error => {
+      console.error('Error deleting user:', error);
+    });
+  }
+// bat krke aana thodi der
 
   saveUserChanges(): void {
     if (this.editedUser) {
@@ -179,9 +207,13 @@ export class UserTableComponent implements OnInit {
     }
   }
 
-  deleteUser(user: User): void {
-    this.user = this.user.filter((u: User) => u.id !== user.id);
-  }
+  // deleteUser(row: any) {
+  //   console.log(row,"row");
+
+  //   this.userService.deleteUser(row.id).subscribe(() => {
+  //     this.filteredRows = this.filteredRows.filter(user => user.id !== row.id);
+  //   });
+  // }
 
   addData(): void {
     this.router.navigateByUrl("/create-form");

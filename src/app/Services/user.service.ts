@@ -76,6 +76,12 @@ export class UserService {
     return this.httpClient.put(`https://localhost:7071/api/Employee/${payload.guidId}`, payload, { headers });
   }
 
+  
+  deleteUser(payload: any): Observable<any> {
+    const headers = this.createAuthorizationHeader();
+    return this.httpClient.delete(`https://localhost:7071/api/Employee/${payload}`, { headers });
+  }
+
   login(payload: any): Observable<any> {
     return this.httpClient.post('https://localhost:7071/api/employee/login', payload).pipe(
       tap((response: any) => {
