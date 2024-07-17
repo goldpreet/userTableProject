@@ -2,6 +2,8 @@
   <h2 class="text-center mb-4">User Details</h2>
   <div class="main">
     <div class="row">
+
+      <p>{{userDetails.name}}</p>
       <img [src]="'https://localhost:7071' + userDetails.imageUrl" class="image-dp" alt="User Image">
 
       <button (click)="editImage()"><img class="editbtn" src=" https://cdn-icons-png.flaticon.com/128/8417/8417111.png" alt="EditImg">Image Edit</button>
@@ -99,10 +101,10 @@
       </div>
 
       <!-- Add file input and upload button -->
-      <div>
+      <!-- <div>
         <input type="file" (change)="onFileSelected($event)">
         <button (click)="uploadImage()">Upload Image</button>
-      </div>
+      </div> -->
 
       <!-- Existing HTML content for user details -->
       <!-- Your existing HTML for user details goes here -->

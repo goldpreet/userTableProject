@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { UserService } from '../../Services/user.service';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 interface User {
   id: number;
@@ -12,76 +13,181 @@ interface User {
 @Component({
   selector: 'app-user-table',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NgxDatatableModule],
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.css']
 })
-export class UserTableComponent {
-  users: User[] = [
-    { id: 1, name: 'Kiran', status: 'Active' },
-    { id: 2, name: 'Jeenal', status: 'Inactive' },
-    { id: 3, name: 'Kirti', status: 'Pending' },
-    { id: 4, name: 'Raman', status: 'Inactive' },
-    { id: 5, name: 'Lavanya', status: 'Pending' }
+export class UserTableComponent implements OnInit {
+  rows: any[] = [];
+  filteredRows: any[] = [];
+  columns = [
+    { prop: 'role', name: 'Role' },
+    { prop: 'name', name: 'Name' },
+    { prop: 'gender', name: 'Gender' },
+    { prop: 'phone', name: 'Phone' },
+    { prop: 'age', name: 'Age' },
+    { prop: 'email', name: 'Email' },
+    { prop: 'password', name: 'Password' }
   ];
 
+  currentPage: number = 1;
+  totalPages: number = 1;
+  page = { limit: 4, offset: 0 };
+
   editedUser: User | null = null;
+  user: any;
+  userdata: any = [];
+  userService = inject(UserService);
 
   constructor(private router: Router) { }
 
-  editUser(user: User) {
-    this.editedUser = { ...user }; // Make a copy of the user to edit
-  }
-  user: any
- 
-
-  cancelEdit() {
-    this.editedUser = null; // Cancel editing, reset editedUser
+  ngOnInit(): void {
+    this.loadData();
+    this.user = this.userService.getLoggedInUser();
+    console.log(this.user, "user");
   }
 
-  saveUserChanges() {
+  loadData(): void {
+    this.userService.getUserDetails().subscribe((data: any) => {
+      this.rows = data.map((user: any) => ({
+        role: user.role,
+        name: user.name,
+        gender: user.gender,
+        phone: user.phone,
+        age: user.age,
+        email: user.email,
+        id: user.guidId,
+        password: user.password
+      }));
+
+      this.filteredRows = [...this.rows];
+      this.initializePagination();
+    });
+  }
+
+  getMaxEntries(): number {
+    return Math.min((this.page.offset + 1) * this.page.limit, this.filteredRows.length);
+  }
+
+  updateFilter(event: any): void {
+    const val = event.target.value.toLowerCase();
+    this.filteredRows = this.rows.filter(row => {
+      return row.name.toLowerCase().startsWith(val);
+
+    });
+    this.initializePagination();
+  }
+
+
+  onPage(event: any): void {
+    this.page = event;
+    this.currentPage = this.page.offset + 1;
+  }
+
+  onFirstPage(): void {
+    this.page.offset = 0;
+    this.updateTable();
+  }
+
+  onPreviousPage(): void {
+    if (this.page.offset > 0) {
+      this.page.offset--;
+      this.updateTable();
+    }
+  }
+
+  onNextPage(): void {
+    if (!this.isLastPage()) {
+      this.page.offset++;
+      this.updateTable();
+    }
+  }
+
+  onLastPage(): void {
+    this.page.offset = this.totalPages - 1;
+    this.updateTable();
+  }
+
+  onPageSelect(pageNum: number): void {
+    this.page.offset = pageNum - 1;
+    this.updateTable();
+  }
+
+  isLastPage(): boolean {
+    return this.page.offset === this.totalPages - 1;
+  }
+
+  getPageNumbers(): number[] {
+    const pageNumbers: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pageNumbers.push(i);
+    }
+    return pageNumbers;
+  }
+
+  onItemsPerPageChange(event: Event): void {
+    const newLimit = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.page.limit = newLimit;
+    this.initializePagination();
+  }
+
+  updateTotalPages(): void {
+    this.totalPages = Math.ceil(this.filteredRows.length / this.page.limit);
+  }
+
+  initializePagination(): void {
+    this.updateTotalPages();
+    this.page.offset = 0;
+    this.currentPage = 1;
+    this.updateTable();
+  }
+
+  updateTable(): void {
+    this.currentPage = this.page.offset + 1;
+    this.filteredRows = [...this.filteredRows];
+  }
+
+  editUser(user: User): void {
+    this.editedUser = { ...user };
+  }
+
+  cancelEdit(): void {
+    this.editedUser = null;
+  }
+
+  onRowClick(row: any) {
+    this.router.navigate([`/display-details/${row.id}`]);
+  }
+
+  onRowActivate(event: any) {
+    console.log(event, "event row");
+
+    if (event.type === 'click') {
+      this.onRowClick(event.row);
+    }
+  }
+
+
+  saveUserChanges(): void {
     if (this.editedUser) {
-      // Find the index of the edited user in the array
-      const index = this.users.findIndex(u => u.id === this.editedUser!.id);
+      const index = this.user.findIndex((u: User) => u.id === this.editedUser!.id);
       if (index !== -1) {
-        // Update the user in the array
-        this.users[index] = { ...this.editedUser };
+        this.user[index] = { ...this.editedUser };
         console.log(`User ${this.editedUser.id} updated.`);
-        this.editedUser = null; // Reset editedUser after save
+        this.editedUser = null;
       }
     }
   }
 
-  deleteUser(user: User) {
-    this.users = this.users.filter(u => u.id !== user.id);
+  deleteUser(user: User): void {
+    this.user = this.user.filter((u: User) => u.id !== user.id);
   }
 
-  addData() {
+  addData(): void {
     this.router.navigateByUrl("/create-form");
   }
 
-  userService = inject(UserService)
-  userdata: any = []
-  ngOnInit() {
-    this.userService.getUserDetails().subscribe((data: any) => {
-      console.log(data, "data users");
-      this.userdata = data
-    })
-
-    this.user = this.userService.getLoggedInUser();
-    console.log(this.user, "user");
-    // getting data from backend part 
-  }
-
-  logout() {
-
+  logout(): void {
     this.router.navigate(['/log-in']);
   }
-
 }
-
-
-
-
-
-

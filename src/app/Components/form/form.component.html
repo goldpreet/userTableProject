@@ -3,10 +3,14 @@
     <div class="form-container">
       <h1 class="heading">Form Data</h1>
       <div class="form-group">
-
         <div class="form-group">
-          <label for="role">Role</label>
-          <input id="role" formControlName="role" type="text" placeholder="Admin or User" />
+          <label for="role" >Role</label>
+          <select id="role" formControlName="role">
+            <option value="">Select Role</option>
+            <option value="User">User</option>
+            <option value="Administrator">Administrator</option>
+           
+          </select>
           <span *ngIf="hasError('role', 'required')" class="error-message">Role is required</span>
         </div>
         <label for="name">Name</label>

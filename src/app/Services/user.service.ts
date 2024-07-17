@@ -79,7 +79,8 @@ export class UserService {
   login(payload: any): Observable<any> {
     return this.httpClient.post('https://localhost:7071/api/employee/login', payload).pipe(
       tap((response: any) => {
-        if (response.token) {
+        if (response.token) 
+        {
           this.setToken(response.token);
           this.setUser(response.person);
         }

@@ -1,62 +1,167 @@
-.heading
-{
-    text-align: center;
-    font-size: 40px;
-    color: rgb(158, 9, 9);
-}
-.bton
-{
-    padding: 7px 9px;
-    margin: 7px;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
 
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f7f9;
 }
-.bton:hover {
-    background-color: #c1aaaaaa;
-    transform: scale(1.3);
-    color: rgb(202, 80, 80);
-  }
-  
-.btn 
-{
-    padding: 15px 20px;
-    background-color: rgb(138, 23, 23);
-    font-size: 18px;
-    color: white;
-    border: 0px solid white;
-    float: right;
-    margin: 15px;
 
+.datatable-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
 }
-.table-container {
-    margin: 20px;
-    overflow-x: auto;
-    /* background-image: linear-gradient( rgba(212, 171, 187, 0.877) ,  rgba(176, 162, 224, 0.781)); */
 
+.datatable-container:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  font-weight: 500;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.filter-container input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 25px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.filter-container input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+.modern-table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.modern-table .datatable-header {
+  background-color: #f8f9fa;
+  font-weight: 500;
+}
+
+.modern-table .datatable-header-cell {
+  padding: 15px;
+  font-weight: 600;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.modern-table .datatable-header-cell:hover {
+  background-color: #e9ecef;
+}
+
+.sort-icon {
+  margin-left: 5px;
+  color: #999;
+}
+
+.modern-table .datatable-body-row {
+  transition: background-color 0.3s ease;
+}
+
+.modern-table .datatable-body-row:hover {
+  background-color: #f1f3f5;
+}
+
+.pagination-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.pagination-info {
+  color: #666;
+  font-size: 14px;
+}
+
+.pagination-controls button {
+  margin: 0 3px;
+  padding: 8px 12px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #f1f3f5;
+}
+
+.pagination-controls button.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.items-per-page {
+  display: flex;
+  align-items: center;
+}
+
+.items-per-page label {
+  margin-right: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.items-per-page select {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.items-per-page select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-direction: column;
+    align-items: stretch;
   }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
+
+  .pagination-info, .pagination-controls, .items-per-page {
+    margin-bottom: 15px;
   }
-  
-  th, td {
-    padding: 12px;
-    border: 1px solid #f0eded;
-    text-align: center;
-    font-size: 19px;
-  }
-  
-  th {
-    background-color: #b4b9bcbc;
-    font-size: 22px;
-    text-align: center;
-  }
-  
-  /* tr:nth-child(even) {
-    background-color: #f9f9f9;
-  } */
-  
-  tr:hover {
-    background-color: #e4e4e4aa;
-  }
-  
+}

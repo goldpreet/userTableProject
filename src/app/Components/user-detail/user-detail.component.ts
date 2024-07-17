@@ -56,7 +56,7 @@ export class UserDetailComponent {
 
   toggleAddQualification() {
     if(this.user.role!=="Administrator"){
-      alert("Employee is not admin");
+      alert("Employee is not Admin");
       return;
     }
     this.showQualificationInputs = true;
@@ -94,7 +94,7 @@ export class UserDetailComponent {
 
   toggleEditMode() {
     if(this.user.role !== "Administrator"){
-      alert("Employee is not Admin")
+      alert( "Employee  is a User")
       return ;
     }
     this.isEditMode = !this.isEditMode;

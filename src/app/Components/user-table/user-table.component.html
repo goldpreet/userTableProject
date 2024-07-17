@@ -1,46 +1,65 @@
-<div class="table-container">
-
-    <div>
-        <h1 class="heading">User Table </h1>
-           <!-- Logout Button -->
-            <p>{{user.name}}</p>
+<div class="datatable-container">
+  <div>
+    <h1 class="heading">User Table</h1>
+    <p>{{user.name}}</p>
     <button class="btn btn-danger ml-auto" (click)="logout()">
       <i class="fas fa-sign-out-alt"></i> Logout
     </button>
-        <button class="btn" (click) = "addData()"> +Add </button>
-        
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Role</th>
-          <th>Name</th>
-          <th>Gender</th>
-          <th>Status</th>
-          <th>Email</th>
-          <th>Phone</th>
-          
-
-        </tr>
-      </thead>
-      <tbody>
-        <tr  [routerLink]="['/display-details', user.guidId]" click *ngFor="let user of userdata">
-        
-       <!-- displaying data of a specified user 
-        as per the required guidId which user is select from user table -->
-
-          <td>{{user.role}}</td>
-          <td>{{user.name}}</td>
-          <td>{{user.gender}}</td>
-          <td>{{user.status}}</td>
-          <td>{{user.email}}</td>
-          <td>{{user.phone}}</td>
-   
-        </tr>
-      </tbody>
-    </table>
-
-
+    <button class="btn" (click)="addData()"> + Add </button>
   </div>
+  <div class="filter-container">
+    <div style="position: relative;">
+      <input type="text" placeholder="Type to filter" (input)="updateFilter($event)">
+      <i class="fas fa-search search-icon"></i>
+    </div>
+  </div>
+  <ngx-datatable
+    class="bootstrap"
+    [rows]="filteredRows"
+    [columns]="columns"
+    [columnMode]="'force'"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    [limit]="page.limit"
+    [count]="filteredRows.length"
+    [offset]="page.offset"
+    (page)="onPage($event)"
+    (activate)="onRowActivate($event)">
+
+  ></ngx-datatable>
+
+
   
- 
+  <div class="pagination-container">
+    <div class="paginati/on-info">
+      Showing {{page.offset * page.limit + 1}} to 
+      {{getMaxEntries()}} 
+      of {{filteredRows.length}} entries
+    </div>
+    <div class="pagination-controls">
+      <button (click)="onFirstPage()" [disabled]="page.offset === 0">
+        <i class="fas fa-angle-double-left"></i>
+      </button>
+      <button (click)="onPreviousPage()" [disabled]="page.offset === 0">
+        <i class="fas fa-angle-left"></i>
+      </button>
+      <span class="page-numbers">
+        <ng-container *ngFor="let pageNum of getPageNumbers()">
+          <button 
+            (click)="onPageSelect(pageNum)" 
+            [class.active]="pageNum === currentPage">
+            {{pageNum}}
+          </button>
+        </ng-container>
+      </span>
+      <button (click)="onNextPage()" [disabled]="isLastPage()">
+        <i class="fas fa-angle-right"></i>
+      </button>
+      <button (click)="onLastPage()" [disabled]="isLastPage()">
+        <i class="fas fa-angle-double-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+

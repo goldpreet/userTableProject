@@ -3,6 +3,9 @@
     background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* background-image: url("https://img.freepik.com/premium-photo/abstract-background-design-template_980736-1171.jpg?size=626&ext=jpg&ga=GA1.1.247542121.1720432308&semt=ais_hybrid"); */
+    background-repeat: no-repeat;
+    background-size: cover;
     /* background-image: linear-gradient( rgba(240, 189, 112, 0.514) ,  rgba(123, 120, 131, 0.781)); */
   }
 
@@ -36,13 +39,21 @@
   .table th, .table td {
     vertical-align: middle;
   }
+
+  td
+  {
+    color: #861717;
+    font-style: italic;
+    font-size: 18px;
+
+  }
   
   .table-bordered th, .table-bordered td {
-    border: 1px solid #dee2e6;
+    border: 1px solid #bdc9d6;
   }
   
   .table th {
-    background-color: #e9ecef;
+    background-color: #8e969e;
     font-weight: bold;
   }
   
@@ -64,6 +75,13 @@
     font-weight: bold;
     transition: background-color 0.3s ease;
   }
+  p
+{
+  font-size: 20px; 
+  font-weight: bolder;
+  font-style: italic;
+  color: rgb(247, 10, 57);
+}
   
   .addQ:hover {
     background-color: #0056b3;
@@ -75,7 +93,7 @@
     padding: 8px;
     font-size: 14px;
     border-radius: 5px;
-    border: 1px solid #ced4da;
+    border: 1px solid #707a84;
     transition: border-color 0.3s ease;
   }
   
