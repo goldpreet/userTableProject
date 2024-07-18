@@ -55,6 +55,7 @@ h2 {
   top: 50%;
   transform: translateY(-50%);
   color: #999;
+ 
 }
 
 .modern-table {
@@ -164,4 +165,26 @@ h2 {
   .pagination-info, .pagination-controls, .items-per-page {
     margin-bottom: 15px;
   }
+}
+ 
+.heading
+{
+  text-align: center;
+  color: rgb(236, 88, 34);
+}
+
+p
+{
+  color:rgb(237, 69, 13);
+  font-size: 20px ;
+  font-style: italic;
+  font-weight: bold;
+
+}
+
+.btn
+{
+  background-color: rgb(206, 191, 195);
+margin-left: 10px;
+padding: 8px;
 }

@@ -184,17 +184,13 @@ export class UserTableComponent implements OnInit {
   deleteUser(row: any) {
     console.log(row, "row");
 
-    this.userService.deleteUser(row.id).subscribe(() => {
-      alert('User deleted successfully');
-      // Remove the deleted user from the list
-      this.rows = this.rows.filter(user => user.id !== row.id);
-      this.filteredRows = this.filteredRows.filter(user => user.id !== row.id);
-      this.initializePagination();  // Reinitialize pagination to reflect the changes
-    }, error => {
-      console.error('Error deleting user:', error);
-    });
+    this.userService.deleteUser(row.id).subscribe((data) => {
+      console.log(data);
+      alert('user deletd')
+      this.rows = this.rows.filter((rowOg) => rowOg.id !== row.id)
+    })
   }
-// bat krke aana thodi der
+
 
   saveUserChanges(): void {
     if (this.editedUser) {
