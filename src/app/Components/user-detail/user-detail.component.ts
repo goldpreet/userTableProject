@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../Services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ export class UserDetailComponent {
   userDetails: any = {};
   isEditMode: boolean = false;
   uploadedImage: string | null = null;
-
+  originalUserDetails: any = {};
   showQualificationInputs: boolean = false;
   newQualification: any = {
     qualificationName: '',
@@ -31,7 +31,8 @@ export class UserDetailComponent {
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
 
@@ -55,8 +56,12 @@ export class UserDetailComponent {
 
 
   toggleAddQualification() {
-    if(this.user.role!=="Administrator"){
+    if (this.user.role !== "Administrator") {
       alert("Employee is not Admin");
+      return;
+    }
+    if (!this.isEditMode) {
+      alert("Edit mode is off")
       return;
     }
     this.showQualificationInputs = true;
@@ -92,10 +97,12 @@ export class UserDetailComponent {
     }
   }
 
+
+
   toggleEditMode() {
-    if(this.user.role !== "Administrator"){
-      alert( "Employee  is a User")
-      return ;
+    if (this.user.role !== "Administrator") {
+      alert("Employee is a User");
+      return;
     }
     this.isEditMode = !this.isEditMode;
     if (!this.isEditMode) {
@@ -103,7 +110,14 @@ export class UserDetailComponent {
       this.userService.updateUserData(payload).subscribe(() => {
         console.log("User details updated successfully");
       });
+    } else {
+      this.originalUserDetails = { ...this.userDetails };
     }
+  }
+
+  cancelUpdate() {
+    this.userDetails = { ...this.originalUserDetails };
+    this.isEditMode = false;
   }
 
   cancelAddQualification() {
@@ -144,7 +158,18 @@ export class UserDetailComponent {
         complete: () => {
           console.log('Image update operation completed');
         }
+
       });
+
+
     }
+
+  }
+
+  logout(): void {
+    this.router.navigate(['/log-in']);
   }
 }
+
+
+

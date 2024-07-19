@@ -45,7 +45,7 @@ export class UserTableComponent implements OnInit {
 
   currentPage: number = 1;
   totalPages: number = 1;
-  page = { limit: 4, offset: 0 };
+  page = { limit: 3, offset: 0 };
 
   editedUser: User | null = null;
   user: any;
@@ -219,3 +219,11 @@ export class UserTableComponent implements OnInit {
     this.router.navigate(['/log-in']);
   }
 }
+
+
+// uploadImage() {
+//   if (this.selectedFile && this.userdata.guidId) {
+//     const formData = new FormData();
+//   formData.append('imageFile', this.selectedFile, this.selectedFile.name);
+//   }
+// }

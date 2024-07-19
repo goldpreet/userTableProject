@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { UserService } from '../../Services/user.service';
 import { Router } from '@angular/router';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-form',
@@ -130,25 +131,24 @@ export class FormComponent {
       this.selectedFile = file;
     }
   }
-  
+
 
   onSubmit() {
     if (this.userForm.invalid) {
       return;
     }
 
-    console.log(this.selectedFile,"selcetdd file");
-    
-  
+    console.log(this.selectedFile, "selected file");
+
     const formData = new FormData();
-  
+
     // Append each form field individually
     Object.keys(this.userForm.controls).forEach(key => {
       if (key !== 'qualifications') {
         formData.append(key, this.userForm.get(key)?.value);
       }
     });
-  
+
     // Append qualifications as an array of objects
     const qualifications = this.userForm.get('qualifications')?.value;
     qualifications.forEach((qual: any, index: number) => {
@@ -156,20 +156,29 @@ export class FormComponent {
       formData.append(`qualifications[${index}].experience`, qual.experience);
       formData.append(`qualifications[${index}].institution`, qual.institution);
     });
-  
+
     // Append the file
     if (this.selectedFile) {
       formData.append('imageFile', this.selectedFile, this.selectedFile.name);
     }
-  
+
     console.log('FormData entries:');
     formData.forEach((value, key) => {
       console.log(key, value);
     });
-  
-    this.userService.addUserDetails(formData).subscribe(() => {
-      alert('Data submitted');
-      this.route.navigateByUrl('/user');
-    });
+
+    this.userService.addUserDetails(formData)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          alert('Data submitted');
+          this.route.navigateByUrl('/user');
+        },
+        error: (error) => {
+          console.error('Error submitting data:', error);
+          alert('An error occurred while submitting data. Please try again.');
+        }
+      });
   }
+
 }

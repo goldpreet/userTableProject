@@ -1,37 +1,78 @@
 <div class="container">
-  <h2 class="text-center mb-4">User Details</h2>
+  <div class="main-head">
+    <h2 class="text-center mb-4">User Details</h2>
+
+    <p>{{userDetails.name}}</p>
+    <button class="btn btn-danger ml-auto" id="button" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+
+  </div>
+
   <div class="main">
     <div class="row">
+      <div class="header">
 
-      <p>{{userDetails.name}}</p>
-      <img [src]="'https://localhost:7071' + userDetails.imageUrl" class="image-dp" alt="User Image">
+        <div class="image-main">
+          <div class="logo-image">
+            <img [src]="'https://localhost:7071' + userDetails.imageUrl" class="image-dp" alt="User Image">
+          </div>
 
-      <button (click)="editImage()"><img class="editbtn" src=" https://cdn-icons-png.flaticon.com/128/8417/8417111.png" alt="EditImg">Image Edit</button>
-     
-      
+          <div class="image-edit">
+            <button (click)="editImage()" class="tooltip">
+              <img class="editbtn" src="https://cdn-icons-png.flaticon.com/128/8417/8417111.png" alt="EditImg">
+              <span class="tooltip-text">Image Edit</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+
+
       <hr>
+
+
 
       <div class="blank">
         <br>
         <br>
       </div>
-  
-      <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none">
-      <div class="col-md-12 text-right mb-3">
-        <button class="btn btn-secondary" (click)="toggleEditMode()">
 
-          <i class="{{ isEditMode ? 'fas fa-save' : 'fas fa-edit' }}"></i>
-          <img class="editbtn" src="https://as2.ftcdn.net/v2/jpg/03/38/46/23/1000_F_338462346_wZZhUA9S6daekMfyuF8cBssJgj4nao8M.jpg" alt="Company Logo">
-          {{ isEditMode ? 'Save' : 'Edit' }}
-        </button>      
-      </div>
+
+
+      <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none">
+
     </div>
     <div class="row">
       <div class="col-md-6">
-        <h4 class="mb-3">Personal Information</h4>
+        <div class="titleContainer">
+          <h4 class="">Personal Information</h4>
+          <div *ngIf="!isEditMode" class="col-md-12 text-right tooltip">
+            <button class="btn btn-secondary" (click)="toggleEditMode()">
+
+              <i class="fas fa-edit"></i>
+              <img class="editbtn"
+                src="https://as2.ftcdn.net/v2/jpg/03/38/46/23/1000_F_338462346_wZZhUA9S6daekMfyuF8cBssJgj4nao8M.jpg"
+                alt="Company Logo">
+              <!-- {{ isEditMode ? 'Save' : 'Edit' }} -->
+              
+            </button>
+            <span class="tooltip-text">Edit</span>
+
+
+          </div>
+          <div *ngIf="isEditMode">
+            <button class="btn btn-success" (click)="toggleEditMode()">✔</button>
+            <button class="btn btn-danger" (click)="cancelUpdate()">✖</button>
+          </div>
+        </div>
+
         <table class="table table-bordered">
           <tbody>
-            <tr *ngFor="let field of ['role', 'name', 'email', 'status', 'gender', 'age', 'phone', 'salary', 'password']">
+            <tr
+              *ngFor="let field of ['role', 'name', 'email', 'status', 'gender', 'age', 'phone', 'salary', 'password']">
               <th>{{ field | titlecase }}</th>
               <td *ngIf="!isEditMode">{{ userDetails[field] }}</td>
               <td *ngIf="isEditMode">
@@ -44,12 +85,14 @@
 
       <div class="col-md-6">
         <div class="add">
-          <h4 class="mb-3">Qualifications</h4>
-          <div class="tooltip">
-            <button type="button" class="btn btn-secondary add-qualification-btn" (click)="toggleAddQualification()">+
-              <i class="fas fa-plus"></i>
-              <span class="tooltip-text" (click)="updateQualification()">Add Qualification</span>
-            </button>
+          <div class="titleContainer">
+            <h4 class="">Qualifications</h4>
+            <div class="tooltip">
+              <button type="button" class="btn btn-secondary add-qualification-btn" (click)="toggleAddQualification()">+
+                <i class="fas fa-plus"></i>
+                <span class="tooltip-text" (click)="updateQualification()">Add Qualification</span>
+              </button>
+            </div>
           </div>
           <div class="table">
             <table class="table table-bordered"
@@ -61,7 +104,7 @@
                   <th>Institution</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="qualification-td">
                 <tr *ngFor="let qualification of userDetails.qualifications">
                   <td>{{ qualification.qualificationName }}</td>
                   <td>{{ qualification.experience }} years</td>
