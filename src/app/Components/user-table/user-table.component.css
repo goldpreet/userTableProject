@@ -206,3 +206,50 @@ padding: 9px;
   border: 1px solid #6d6565;
 }
 
+
+
+/* .main-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 70px;
+} */
+
+.text-center {
+  text-align: center;
+  color: #a12222;
+  font-size: 30px;
+  text-shadow: 1px 1px crimson;
+margin-top: -50px;
+}
+
+.main-head p {
+  font-size: 23px;
+  position: absolute;
+  right: 120px;
+  top: 7%;
+  transform: translateY(-50%);
+  margin: 0;
+}
+
+.titleContainer {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+#button {
+
+  position: absolute;
+  right: 20px;
+  top: 5%;
+
+}
+
+
+.image-dp {
+  width: 120px;
+  height: 110px;
+  border-radius: 50%;
+
+}

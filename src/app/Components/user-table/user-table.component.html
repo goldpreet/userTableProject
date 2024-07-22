@@ -1,45 +1,43 @@
-<div class="datatable-container">
-  <div>
-    <h1 class="heading">User Table</h1>
-    
-    <p>{{user.name}}</p>
-    <button class="btn btn-danger ml-auto" (click)="logout()">
-      <i class="fas fa-sign-out-alt"></i> Logout
-    </button>
-    <button class="btn" (click)="addData()"> + Add </button>
+<div class="container">
+  <div class="main-head">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex align-items-center">
+        <div class="logo-image">
+          <img [src]="'https://localhost:7071' + user.imageUrl" class="image-dp" alt="User Image">
+        </div>
+      </div>
+      <h2 class="text-center flex-grow-1">User Table</h2>
+      <div>
+        <button class="btn btn-danger ml-2" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+        <button class="btn btn-primary ml-2" (click)="addData()"> + Add </button>
+      </div>
+    </div>
   </div>
+
   <div class="filter-container">
     <div style="position: relative;">
       <input type="text" placeholder="Type to filter" (input)="updateFilter($event)">
       <i class="fas fa-search search-icon"></i>
     </div>
   </div>
+  
   <ngx-datatable class="bootstrap" [rows]="filteredRows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
     [rowHeight]="'auto'" [limit]="page.limit" [count]="filteredRows.length" [offset]="page.offset"
     (page)="onPage($event)" (activate)="onRowActivate($event)">
 
-
-    <!-- Define all columns explicitly -->
-
-    <ngx-datatable-column name=" Name" prop="name"></ngx-datatable-column>
-    <ngx-datatable-column name=" Gender" prop="gender"></ngx-datatable-column>
-    <ngx-datatable-column name=" Phone" prop="phone"></ngx-datatable-column>
+    <ngx-datatable-column name="Role" prop="role"></ngx-datatable-column>
+    <ngx-datatable-column name="Name" prop="name"></ngx-datatable-column>
+    <ngx-datatable-column name="Gender" prop="gender"></ngx-datatable-column>
+    <ngx-datatable-column name="Phone" prop="phone"></ngx-datatable-column>
     <ngx-datatable-column name="Age" prop="age"></ngx-datatable-column>
     <ngx-datatable-column name="Email" prop="email"></ngx-datatable-column>
-
-
-
-    <!-- Custom template for the Actions column -->
-    <!-- <ngx-datatable-column name="Actions" [sortable]="false" [canAutoResize]="false" [draggable]="false" [width]="100">
-      <ng-template ngx-datatable-cell-template let-row="row">
-        <button class="btn btn-danger btn-sm" (click)="deleteUser(row); $event.stopPropagation()">Delete</button>
-      </ng-template>
-    </ngx-datatable-column> -->
 
   </ngx-datatable>
 
   <div class="pagination-container">
-    <div class="paginati/on-info">
+    <div class="pagination-info">
       Showing {{page.offset * page.limit + 1}} to
       {{getMaxEntries()}}
       of {{filteredRows.length}} entries
@@ -54,7 +52,6 @@
         <option value="10">10</option>
       </select>
     </div>
-
 
     <div class="pagination-controls">
       <button (click)="onFirstPage()" [disabled]="page.offset === 0">

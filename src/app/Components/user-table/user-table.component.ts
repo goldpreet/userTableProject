@@ -42,6 +42,7 @@ export class UserTableComponent implements OnInit {
       }
     ];
   }
+  
 
   currentPage: number = 1;
   totalPages: number = 1;
@@ -218,6 +219,7 @@ export class UserTableComponent implements OnInit {
   logout(): void {
     this.router.navigate(['/log-in']);
   }
+ 
 }
 
 
@@ -227,3 +229,7 @@ export class UserTableComponent implements OnInit {
 //   formData.append('imageFile', this.selectedFile, this.selectedFile.name);
 //   }
 // }
+
+
+
+
